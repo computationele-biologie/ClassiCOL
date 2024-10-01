@@ -22,6 +22,6 @@ You can use the arguments as follows:
   - `-m` specify the fixed modification used during protein extraction, e.g., C,45.987721 or multiple with C,45.98|M,...
   - `-f` (optional) location of the folder containing a custom database in fasta format
     
-**WARNING_1:** First time the algorithm is used it will have to calculate all the protein distances. This only needs to be calculated 1 time, as it is saved after calculations.
+**WARNING_1:** First time the algorithm is used it will have to calculate all the protein distances and can take some time. This only needs to be calculated once, as it is saved after calculations making subsequent runs faster.
 
 **WARNING_2:** The algorithm can use a substantial amount of the available CPU and memory. When not enough is free, there is a chance the algorithm will go into error.
