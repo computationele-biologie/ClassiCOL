@@ -21,5 +21,6 @@ You can use the arguments as follows:
   - `-t` (optional) you can restrict the taxonomy by specifying it, e.g., Pecora or multiple taxonomy Pecora|Primates
   - `-m` specify the fixed modification used during protein extraction, e.g., C,45.987721 or multiple with C,45.98|M,...
   - `-f` (optional) location of the folder containing a custom database in fasta format
-
-**WARNING:** The algorithm can use a substantial amount of the available CPU and memory. When not enough is free, there is a chance the algorithm will go into error.
+    
+**WARNING_1:** First time the algorithm is used it will have to calculate all the protein distances. This only needs to be calculated 1 time, as it is saved after calculations.
+**WARNING_2:** The algorithm can use a substantial amount of the available CPU and memory. When not enough is free, there is a chance the algorithm will go into error.
