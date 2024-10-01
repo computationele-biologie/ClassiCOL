@@ -23,4 +23,5 @@ You can use the arguments as follows:
   - `-f` (optional) location of the folder containing a custom database in fasta format
     
 **WARNING_1:** First time the algorithm is used it will have to calculate all the protein distances. This only needs to be calculated 1 time, as it is saved after calculations.
+
 **WARNING_2:** The algorithm can use a substantial amount of the available CPU and memory. When not enough is free, there is a chance the algorithm will go into error.
