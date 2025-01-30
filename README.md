@@ -1,27 +1,98 @@
-# ClassiCOL version 1.0.0
-## Code and User's Guide
+# ClassiCOL version 1.0.1
+## Updates since ClassiCOL version 1.0.0
+1. Addition of general input file (for non-MASCOT/MaxQuant users)
+2. User defined usage of CPUs now possible
+3. Batch search remembers isoBLASTED peptides (decrease in computing time throughout batch searches)
+4. Protein distance calculations are now faster, precalcutated distance file for pecora can be found in the MISC folder
+5. Addition of sunburst plot, containing species not present in the Classicol database
+6. Addition of easy to navigate csv output file, including rescored values
+7. Addition of summary output file for batch searches
+8. Bos javanicus','Bubalus kerabau','Capricornis sumarensis', 'Daubentonia madagascariensis', 'Eulemur rufifrons', 'Macaca thibetana thibetana', 'Mustela lutreola', 'Mustela nigripes', 'Ovis canadensis', 'Ovibos moschatus', 'Petaurus breviceps papuanus', and 'Tachyglossus aculeatus' were added to the ClassiCOL collagen database
 
-The steps and explanations below will be adapted shortly.
+## Code and User's Guide
+Welcome to the user guide to ClassiCOL. Here will be explained how to use the algorithm and how to interprete the results. If you have any additional questions please contact maarten.dhaenens@ugent.be
 
 ### Installation
 
-1. Download the code in this repository.
-2. Navigate to the download location using the command prompt.
-3. Install the required packages using `pip install -r requirements.txt`.
+1. Download the code in this repository. This includes:
+     a) The ClassiCOL python script
+     b) The Demo folder (if you want to run the demo)
+     c) The MICS folder (contains distance csv and the unimod database)
+     d) The BoneDB folder, which contains the curated ClassiCOL collagen fasta files
+     e) Download the requirements.txt file to install all additional packages
+3. Open Anaconda command Prompt and navigate to the location of the folder to where you downloaded the ClassiCOL folders.
+4. Install the required packages using `pip install -r requirements.txt`.
 
 ### Usage
 Use the following command to start the algorithm with the demo data:
 ```sh
-$ python Classicol.py -d path_to_the_script -l Demo -s MASCOT
+$ python Classicol.py -d path_to_the_script -l path_to_folder_containing_your_search_results -s MASCOT -t Mammalia
 ```
 
 You can use the arguments as follows:
-  - `-l Demo` (in case you want to test the algorithm) or the folder location containing your personal Mascot \*.csv or MaxQuant \*.txt output files
-  - `-s MASCOT` or `MaxQuant` (specify the search engine used)
-  - `-t` (optional) you can restrict the taxonomy by specifying it, e.g., Pecora or multiple taxonomy Pecora|Primates
-  - `-m` specify the fixed modification used during protein extraction, e.g., C,45.987721 or multiple with C,45.98|M,...
+  - `-l` folder location containing your personal Mascot \*.csv, MaxQuant \*.txt, or Manual \*.csv output files. In case you want to test the algorithm a MASCOT output file is provided in the Demo folder. Accessable by using `-l Demo`
+  - `-s MASCOT`, `MaxQuant` or `Manual` (specify the search engine used)
+  - `-t` (optional) you can restrict the taxonomy by specifying it, e.g., Pecora or for species: Bos_taurus or both: Homo_sapiens/Canis
+  - `-m` specify the fixed modification used during protein extraction, e.g., C,45.987721 or multiple with C,45.98/M,...
   - `-f` (optional) location of the folder containing a custom database in fasta format
-    
-**WARNING_1:** First time the algorithm is used it will have to calculate all the protein distances and can take some time. This only needs to be calculated once, as it is saved after calculations making subsequent runs faster.
+  - `-d` the directory to where the ClassiCOL algorithm is located on your computer
+  - `-c` (optional) The amount of CPUs you want to use default = 3 less than available on your computer
+### A dummy example
+1. **Input files:**
+   - MASCOT.csv:
+     Download your results directly from MASCOT in csv format
+   - MaxQuant.txt
+     Use the output datafile containing peptides and locational data from MaxQuant in txt format
+   - Manual.csv:
+     A manual csv can be made and used as input. This file should include a sequence and if present the modification with locational information. N-term location =0, first amino acid has location 1, and C-term uses -1 as location number e.g.:
+```csv
+seq,modifications
+GAAGLPGPK,6|Oxidation
+GFSGLDGAK,
+AGPPGPPGPAGK,3|Oxidation|9|Oxidation
+```
+
+2. **Batch searches:**
+   - MASCOT: Place all MASCOT csv files in the same folder. The algoithm will automatically analyse all files in this folder
+   - MaxQuant: Similar to MASCOT you can place all files in the same folder. Additioanlly if 1 output file contains multiple experiments, the algorithm will automatically recognise this and analyse each experiment individually
+   - Manual: Same as MASCOT
+
+3. **The ClassiCOL output:**
+Classicol will put all the results in the folder 'ClassiCOL_outputs', here each experiment will get its own folder for easy access. This will contain the heatmap, sunburst plot, sunburst plot with species missingness, rescored_barplot, rescored_lineplot, temporary csv output files and the final csv output file. For batch searches there will be a summary output file outputed in the ClassiCOL_output folder.
+
+4. **Interpretation of the results:**
+ClassiCOL will provide an estimation of taxonomy based on the available sequences in the ClassiCOL database and peptides from your search engine. It is always up to the user to interprete what these results mean!
+
+- **The Heatmap**:
+  The heatmap shows the path the algorithm will take given the NCBI taxonomy (y axis) and how the protein related to each other (x axis). The colors show abundance in peptides assigned to each protein after isoBLAST.
+  (figure heatmap)
+  
+- **The sunburst**:
+  This figure shows an interactive overview of the output of your Classicol search. A color scheme is used to highlight to most likely classification (the more yellow the more likely). By hovering of the sunburst plot you can see the amount of attributed peptides and the amount of isoBLASTed peptides. You can zoom in by clicking on the sunburst plot, and zoom out by clicking on the center node (or by refreshing).
+  (figure sunburst)
+  
+- **The sunburst with missingness**:
+  This plot shows exactly the same results as the sunburst plot, however now it includes all known species by NCBI that were not present during the ClassiCOL analysis. Only branches neighboring the main branch are shown up to the Order level. e.g. attached to the Family node, all missing genus (no represenative in the database used) will be shown.
+  (figure sunburst with missingness)
+  
+- **The temporary output csv**:
+  This csv is generated after the initial classification. The species/taxa are ranked to likelyhood and peptides-proteins are shown that were used during the classification.
+  
+- **Rescored barplot**:
+  For each of the classification the top result is taken and rescored. This rescoring is based on uniqueness within the top scoring group of species, meaning that all peptides shared amongst these species will be neglected. The overlap that has uniqueness is shown in this barplot.
+  (figure rescored barplot)
+  
+- **Rescored lineplot**:
+  This lineplot shows how the scoring changes amongst top scoring candidates. When a dropoff is noticed after rescoring, these candidates can be considered as discardable. When no drop-off is noticable, the sample can be comprised of a physical and/or genetic mixture.
+  (figure rescored lineplot)
+  
+- The final output csv:
+  This is an easy to navigate output after rescoring. This includes peptide-protein information and classicifation information.
+  
+- The batch summary csv:
+  This is a minimal information file that gives an overview of the top results alongside some meta data from the batch search.
+
+
+**WARNING_1:** Depending on the amount of unique peptides in your sample and the amount of species you want to consider the isoBLAST calculations could take a while (about 2min for +/- 1000 unique peptides per species). An overnight search is recommended.Batch searches will go much quicker towards the end.
 
 **WARNING_2:** The algorithm can use a substantial amount of the available CPU and memory. When not enough is free, there is a chance the algorithm will go into error.
