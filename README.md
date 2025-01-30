@@ -12,6 +12,10 @@
 ## Code and User's Guide
 Welcome to the user guide to ClassiCOL. Here will be explained how to use the algorithm and how to interprete the results. If you have any additional questions please contact maarten.dhaenens@ugent.be
 
+### Citation
+When using ClassiCOL please cite:
+Engels, I. et al. ClassiCOL: LC-MS/MS analysis for ancient species Classification via Collagen peptide ambiguation. bioRxiv 2024.10.01.616034 (2024) doi:10.1101/2024.10.01.616034.
+
 ### Installation
 
 1. Download the code in this repository. This includes:
