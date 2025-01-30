@@ -32,6 +32,9 @@ $ python Classicol.py -d path_to_the_script -l path_to_folder_containing_your_se
 
 You can use the arguments as follows:
   - `-l` folder location containing your personal Mascot \*.csv, MaxQuant \*.txt, or Manual \*.csv output files. In case you want to test the algorithm a MASCOT output file is provided in the Demo folder. Accessable by using `-l Demo`
+```sh
+$ python Classicol.py -d path_to_the_script -l Demo -s MASCOT
+```
   - `-s MASCOT`, `MaxQuant` or `Manual` (specify the search engine used)
   - `-t` (optional) you can restrict the taxonomy by specifying it, e.g., Pecora or for species: Bos_taurus or both: Homo_sapiens/Canis
   - `-m` specify the fixed modification used during protein extraction, e.g., C,45.987721 or multiple with C,45.98/M,...
