@@ -7,7 +7,7 @@
 5. Addition of sunburst plot, containing species not present in the Classicol database
 6. Addition of easy to navigate csv output file, including rescored values
 7. Addition of summary output file for batch searches
-8. Bos javanicus','Bubalus kerabau','Capricornis sumarensis', 'Daubentonia madagascariensis', 'Eulemur rufifrons', 'Macaca thibetana thibetana', 'Mustela lutreola', 'Mustela nigripes', 'Ovis canadensis', 'Ovibos moschatus', 'Petaurus breviceps papuanus', and 'Tachyglossus aculeatus' were added to the ClassiCOL collagen database
+8. '_Bos javanicus_','_Bubalus kerabau_','_Capricornis sumarensis_', '_Daubentonia madagascariensis_', '_Eulemur rufifrons_', '_Macaca thibetana thibetana_', '_Mustela lutreola_', '_Mustela nigripes_', '_Ovis canadensis_', '_Ovibos moschatus_', '_Petaurus breviceps papuanus_', and '_Tachyglossus aculeatus_' were added to the ClassiCOL collagen database. _Homo sapiens_ COL1A1 and COL1A2 Uniprot reference sequences were added.
 
 ## Code and User's Guide
 Welcome to the user guide to ClassiCOL. Here will be explained how to use the algorithm and how to interprete the results. If you have any additional questions please contact maarten.dhaenens@ugent.be
