@@ -1007,10 +1007,8 @@ def thread_align(i,seq,m,calculator,sdb):
         b=SeqRecord(align[1].replace('-','B'),id='b')
         align = MultipleSeqAlignment([a, b])
         dm = calculator.get_distance(align)
-        print(seq_keep,sdb[i],' aligned')
         return (dm.matrix[1][0], seq_keep)
     except:
-        print(seq_keep,sdb[i],' do not match')
         return (10,seq_keep) 
     
 
