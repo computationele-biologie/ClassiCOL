@@ -20,6 +20,7 @@ Welcome to the user guide to ClassiCOL. Here will be explained how to use the al
      c) The MICS folder (contains distance csv and the unimod database)
      d) The BoneDB folder, which contains the curated ClassiCOL collagen fasta files
      e) Download the requirements.txt file to install all additional packages
+   **Put all these folders in the ClassiCOL_version_x_x_x folder downloaded from GitHub**
 3. Open Anaconda command Prompt and navigate to the location of the folder to where you downloaded the ClassiCOL folders.
 4. Install the required packages using `pip install -r requirements.txt`.
 
@@ -86,10 +87,10 @@ ClassiCOL will provide an estimation of taxonomy based on the available sequence
   This lineplot shows how the scoring changes amongst top scoring candidates. When a dropoff is noticed after rescoring, these candidates can be considered as discardable. When no drop-off is noticable, the sample can be comprised of a physical and/or genetic mixture.
   (figure rescored lineplot)
   
-- The final output csv:
+- **The final output csv**:
   This is an easy to navigate output after rescoring. This includes peptide-protein information and classicifation information.
   
-- The batch summary csv:
+- **The batch summary csv**:
   This is a minimal information file that gives an overview of the top results alongside some meta data from the batch search.
 
 
