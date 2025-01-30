@@ -75,12 +75,12 @@ ClassiCOL will provide an estimation of taxonomy based on the available sequence
 - **The sunburst**:
   This figure shows an interactive overview of the output of your Classicol search. A color scheme is used to highlight to most likely classification (the more yellow the more likely). By hovering of the sunburst plot you can see the amount of attributed peptides and the amount of isoBLASTed peptides. You can zoom in by clicking on the sunburst plot, and zoom out by clicking on the center node (or by refreshing).
 
-<img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_example_html.png" width="1500" height="1500" />
+<img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_example_html.png"/>
   
 - **The sunburst with missingness**:
   This plot shows exactly the same results as the sunburst plot, however now it includes all known species by NCBI that were not present during the ClassiCOL analysis. Only branches neighboring the main branch are shown up to the Order level. e.g. attached to the Family node, all missing genus (no represenative in the database used) will be shown.
 
-  <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_with_missingness_example_html.png" width="1500" height="1500" />
+  <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_with_missingness_example_html.png" />
   
 - **The temporary output csv**:
   This csv is generated after the initial classification. The species/taxa are ranked to likelyhood and peptides-proteins are shown that were used during the classification.
@@ -88,12 +88,12 @@ ClassiCOL will provide an estimation of taxonomy based on the available sequence
 - **Rescored barplot**:
   For each of the classification the top result is taken and rescored. This rescoring is based on uniqueness within the top scoring group of species, meaning that all peptides shared amongst these species will be neglected. The overlap that has uniqueness is shown in this barplot.
 
-  <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/barplot_example_html.png" width="1500" height="1500" />
+  <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/barplot_example_html.png"/>
   
 - **Rescored lineplot**:
   This lineplot shows how the scoring changes amongst top scoring candidates. When a dropoff is noticed after rescoring, these candidates can be considered as discardable. When no drop-off is noticable, the sample can be comprised of a physical and/or genetic mixture.
 
-  <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/lineplot_example_html.png" width="1500" height="1500" />
+  <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/lineplot_example_html.png" width="400" height="500" />
   
 - **The final output csv**:
   This is an easy to navigate output after rescoring. This includes peptide-protein information and classicifation information.
