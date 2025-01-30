@@ -69,6 +69,9 @@ ClassiCOL will provide an estimation of taxonomy based on the available sequence
 
 - **The Heatmap**:
   The heatmap shows the path the algorithm will take given the NCBI taxonomy (y axis) and how the protein related to each other (x axis). The colors show abundance in peptides assigned to each protein after isoBLAST.
+  
+  <img src="https://github.com/EngelsI/ClassiCOL/240405_tarandus_1_1_p/heatmap_example_html.png" width="150" height="150" />
+  
   (figure heatmap)
   
 - **The sunburst**:
