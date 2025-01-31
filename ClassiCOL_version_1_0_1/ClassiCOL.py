@@ -2004,14 +2004,18 @@ def make_output_file_after_rescoring(path,df_og,df_rescore, file_name,sample_pat
                 if i in taxa:
                     new_t.append(i)
             taxa=new_t
+        for t in taxons[temp_sp[0]]:
+            if t in taxa:
+                taxa = [t]
+                break
         taxa = taxa[0][1]+' ('+', '.join(temp_sp)+')'
         rescore='Not rescored'
         for spr,resc in df_rescore[['species','Rescore']].values:
-            if sp in temp_sp:
+            if spr in temp_sp:
                 rescore = resc
                 break
         summary = summary + [taxa,
-                             list(set(temp['species'].values))[0],
+                             list(set(temp['score'][temp['species'].isin(temp_sp)].values))[0],
                              rescore,
                              len(set(temp['peptides'].values)),
                              len(set(temp['ambig_peps'])),
