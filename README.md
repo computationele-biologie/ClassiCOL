@@ -1,13 +1,16 @@
 # ClassiCOL version 1.0.1
+
+<img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/ClassiCOL-logo5.png" width="1000" height="350" />
+
 ## Updates since ClassiCOL version 1.0.0
 1. Addition of general input file (for non-MASCOT/MaxQuant users)
 2. User defined usage of CPUs now possible
 3. Batch search remembers isoBLASTED peptides (decrease in computing time throughout batch searches)
 4. Protein distance calculations are now faster, precalcutated distance file for pecora can be found in the MISC folder
-5. Addition of sunburst plot, containing species not present in the Classicol database
+5. Addition of sunburst plot, containing species not present in the ClassiCOL database
 6. Addition of easy to navigate csv output file, including rescored values
 7. Addition of summary output file for batch searches
-8. '_Bos javanicus_','_Bubalus kerabau_','_Capricornis sumarensis_', '_Daubentonia madagascariensis_', '_Eulemur rufifrons_', '_Macaca thibetana thibetana_', '_Mustela lutreola_', '_Mustela nigripes_', '_Ovis canadensis_', '_Ovibos moschatus_', '_Petaurus breviceps papuanus_', and '_Tachyglossus aculeatus_' were added to the ClassiCOL collagen database. _Homo sapiens_ COL1A1 and COL1A2 Uniprot reference sequences were added.
+8. '_Bos javanicus_','_Bubalus kerabau_','_Capricornis sumarensis_', '_Daubentonia madagascariensis_', '_Eulemur rufifrons_', '_Macaca thibetana thibetana_', '_Mustela lutreola_', '_Mustela nigripes_', '_Ovis canadensis_', '_Ovibos moschatus_', '_Petaurus breviceps papuanus_', and '_Tachyglossus aculeatus_' were added to the ClassiCOL collagen database. _Homo sapiens_ COL1A1 and COL1A2 Uniprot reference sequences were exchanged.
 
 ## Code and User's Guide
 Welcome to the user guide to ClassiCOL. Here will be explained how to use the algorithm and how to interprete the results. If you have any additional questions please contact maarten.dhaenens@ugent.be
@@ -21,7 +24,7 @@ Engels, I. et al. ClassiCOL: LC-MS/MS analysis for ancient species Classificatio
 1. Download the code in this repository. This includes:
      a) The ClassiCOL python script
      b) The Demo folder (if you want to run the demo)
-     c) The MICS folder (contains distance csv and the unimod database)
+     c) The MISC folder (contains distance csv and the unimod database)
      d) The BoneDB folder, which contains the curated ClassiCOL collagen fasta files
      e) Download the requirements.txt file to install all additional packages
    **Put all these folders in the ClassiCOL_version_x_x_x folder downloaded from GitHub**
@@ -31,13 +34,13 @@ Engels, I. et al. ClassiCOL: LC-MS/MS analysis for ancient species Classificatio
 ### Usage
 Use the following command to start the algorithm with the demo data:
 ```sh
-$ python Classicol.py -d path_to_the_script -l path_to_folder_containing_your_search_results -s MASCOT -t Mammalia
+$ python ClassiCOL.py -d path_to_the_script -l path_to_folder_containing_your_search_results -s MASCOT -t Mammalia
 ```
 
 You can use the arguments as follows:
   - `-l` folder location containing your personal Mascot \*.csv, MaxQuant \*.txt, or Manual \*.csv output files. In case you want to test the algorithm a MASCOT output file is provided in the Demo folder. Accessable by using `-l Demo`
 ```sh
-$ python Classicol.py -d path_to_the_script -l Demo -s MASCOT
+$ python ClassiCOL.py -d path_to_the_script -l Demo -s MASCOT
 ```
   - `-s MASCOT`, `MaxQuant` or `Manual` (specify the search engine used)
   - `-t` (optional) you can restrict the taxonomy by specifying it, e.g., Pecora or for species: Bos_taurus or both: Homo_sapiens/Canis
@@ -66,7 +69,7 @@ AGPPGPPGPAGK,3|Oxidation|9|Oxidation
    - Manual: Same as MASCOT
 
 3. **The ClassiCOL output:**
-Classicol will put all the results in the folder 'ClassiCOL_outputs', here each experiment will get its own folder for easy access. This will contain the heatmap, sunburst plot, sunburst plot with species missingness, rescored_barplot, rescored_lineplot, temporary csv output files and the final csv output file. For batch searches there will be a summary output file outputed in the ClassiCOL_output folder.
+ClassiCOL will put all the results in the folder 'ClassiCOL_outputs', here each experiment will get its own folder for easy access. This will contain the heatmap, sunburst plot, sunburst plot with species missingness, rescored_barplot, rescored_lineplot, temporary csv output files and the final csv output file. For batch searches there will be a summary output file outputed in the ClassiCOL_output folder.
 
 4. **Interpretation of the results:**
 ClassiCOL will provide an estimation of taxonomy based on the available sequences in the ClassiCOL database and peptides from your search engine. It is always up to the user to interprete what these results mean!
@@ -77,7 +80,7 @@ ClassiCOL will provide an estimation of taxonomy based on the available sequence
   <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/heatmap_example_html.png" width="1500" height="1500" />
   
 - **The sunburst**:
-  This figure shows an interactive overview of the output of your Classicol search. A color scheme is used to highlight to most likely classification (the more yellow the more likely). By hovering of the sunburst plot you can see the amount of attributed peptides and the amount of isoBLASTed peptides. You can zoom in by clicking on the sunburst plot, and zoom out by clicking on the center node (or by refreshing).
+  This figure shows an interactive overview of the output of your ClassiCOL search. A color scheme is used to highlight to most likely classification (the more yellow the more likely). By hovering of the sunburst plot you can see the amount of attributed peptides and the amount of isoBLASTed peptides. You can zoom in by clicking on the sunburst plot, and zoom out by clicking on the center node (or by refreshing).
 
 <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_example_html.png"/>
   
