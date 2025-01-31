@@ -28,7 +28,8 @@ Engels, I. et al. ClassiCOL: LC-MS/MS analysis for ancient species Classificatio
      d) The BoneDB folder, which contains the curated ClassiCOL collagen fasta files
      e) Download the requirements.txt file to install all additional packages
    **Put all these folders in the ClassiCOL_version_x_x_x folder downloaded from GitHub**
-<img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/ClassiCOL-files-layout.png" width="1000" height="350" />
+
+<img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/ClassiCOL-files-layout.PNG"/>
 
 3. Open Anaconda command Prompt and navigate to the location of the folder to where you downloaded the ClassiCOL folders.
 4. Install the required packages using `pip install -r requirements.txt`.
