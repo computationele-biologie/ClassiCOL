@@ -1403,7 +1403,6 @@ def new_way(all_animals, all_sequences,df_heatmap_values,df_distance,df_distance
             animals_B = dfs[(dfs['animal'].isin(t_ani[1]))&(dfs['protein'].isin(i))]
             if (len(animals_B)==0 or len(animals_A)==0) and minimal_separation!=0:#protein missingness included for each taxonomic level, if a group is absent than it cannot be used to distinct based on that protein group
                 output[tuple(i)]=0
-                print('At split protein {} to seperate'.format(list(dfs['protein'].values)[0]))
                 continue
             pep_B = set(animals_B['found_match'].values)
             if len(pep_B^pep_A)==0:#the same
