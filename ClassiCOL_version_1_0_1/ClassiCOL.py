@@ -1981,7 +1981,7 @@ def make_output_file_after_rescoring(path,df_og,df_rescore, file_name,sample_pat
                 amb = True
             else:
                 amb = False
-            rescore = 'Not amoungst top candidates used for rescoring'
+            rescore = 'Not amongst top candidates used for rescoring'
             for spr,resc in df_rescore[['species','Rescore']].values:
                 if sp in spr:
                     rescore = resc
