@@ -1986,6 +1986,8 @@ def make_output_file_after_rescoring(path,df_og,df_rescore, file_name,sample_pat
                 if sp in spr:
                     rescore = resc
                     break
+            if ptm=='Nan' or ptm=='nan':
+                ptm = ''
             writer.writerow([sp,gr,sc,rescore,u,amb,pro,p,ptm,t])
     summary=[]
     for gr in range(1,4):
