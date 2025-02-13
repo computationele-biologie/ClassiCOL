@@ -1702,6 +1702,30 @@ def make_output_file(path,df_plot, df_output, file_name, bc, l,sample_path):
     print('generating output file')
     ranking_taxon = []
     df_distance = pd.DataFrame(np.array(bc).reshape(1,-1),columns=l)
+    score_to_taxon = {}
+    for animal in set(list(df_output['animal'].values)):
+        score = list(df_distance[animal].values)[0]
+        if score in score_to_taxon:
+            score_to_taxon[score] = [animal]+score_to_taxon[score]
+        else:
+            score_to_taxon[score] = [animal]
+    print(score_to_taxon)
+    final_taxon = {}
+    for sc,stt in score_to_taxon.items():
+        for i in stt:
+            taxon = all_taxonomy[stt[0]]
+            for t in stt:
+                taxon = set(taxon)&set(all_taxonomy[t])
+            for t in all_taxonomy[stt[0]]:
+                if t in taxon:
+                    for x in stt:
+                        final_taxon[x]=t[1]
+                    break
+    taxon = []
+    for animal in df_output['animal'].values:
+        taxon.append(final_taxon[animal])
+    df_output['taxon']=taxon
+    
     for taxon in set(df_output['taxon'].values):
         animals_in_taxon_out = set(df_output['animal'][df_output['taxon']==taxon].values)
         score = 0
@@ -1709,7 +1733,6 @@ def make_output_file(path,df_plot, df_output, file_name, bc, l,sample_path):
             score += df_distance[a].values
         score = score/len(animals_in_taxon_out)
         ranking_taxon.append([taxon,score])
-    ranking_taxon = sorted(ranking_taxon, key=lambda x:x[1])[::-1]
     with open(path+'/Output_Classicol/'+sample_path+'/ZooMS_results_'+file_name+'.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', lineterminator='\n')
         writer.writerow(['ZooMS analysis output (~: isoBLAST match, *: Unique PSM)'])
@@ -1781,7 +1804,7 @@ def make_connection_graph(df_output, file_name,final_output,found_animals):
             else:
                 unique.append('other')
     df_plot['uniqueness']=unique
-    return df_plot
+    return df_plot, df_output
  
 def rescore(path, file_loc,f_name,sample_path):
     file_name = file_loc
@@ -2160,10 +2183,15 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
     vals = []
     for k,v in temporary_dataframe[['parents','values']].values:
         if v == 'tbd':
+            done = False
             for k2,v2 in temporary_dataframe[['labels','values']].values:
                 if k==k2 and v2!= 'tbd':
                     vals.append(v2)
+                    done = True
                     break
+            if done == False:
+                print('Unable to assign score to {}'.format(k))
+                vals.append(0)
         else:
             vals.append(v)
     temporary_dataframe['values']=vals
@@ -2727,7 +2755,7 @@ if __name__ == "__main__":#rescore output in csv, reduced info output file, summ
                 keep_uncertain = keep_uncertain[keep_uncertain['animal'].isin(set(df_output['animal'].values))]
                 keep_uncertain = keep_uncertain[df_output.columns]
                 df_output = pd.concat([df_output,keep_uncertain],ignore_index=True)
-                df_plot = make_connection_graph(df_output, file_name,final_output,found_animals)
+                df_plot,df_output = make_connection_graph(df_output, file_name,final_output,found_animals)
                 bc, labels,file_out_final = make_sunburst(dfs,all_animals,df_output,file_name,input_animals,df_plot,path,sample_path)
                 ################################################################################
                 df_adding = dfs[data_to_remember.columns]#keep outcome
