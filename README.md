@@ -37,7 +37,7 @@ Engels, I. et al. ClassiCOL: LC-MS/MS analysis for ancient species Classificatio
 ### Usage
 Use the following command to start the algorithm with the demo data:
 ```sh
-$ python ClassiCOL.py -d path_to_the_script -l path_to_folder_containing_your_search_results -s MASCOT -t Mammalia
+$ python ClassiCOL.py -d path_to_the_script -l path_to_folder_containing_your_search_results -s MASCOT -t Mammalia -c number_of_CPUs
 ```
 
 You can use the arguments as follows:
@@ -50,7 +50,7 @@ $ python ClassiCOL.py -d path_to_the_script -l Demo -s MASCOT
   - `-m` specify the fixed modification used during protein extraction, e.g., C,45.987721 or multiple with C,45.98/M,...
   - `-f` (optional) location of the folder containing a custom database in fasta format
   - `-d` the directory to where the ClassiCOL algorithm is located on your computer
-  - `-c` (optional) The amount of CPUs you want to use default = 3 less than available on your computer
+  - `-c` The number of CPUs you want to use (default = 3 less than available on your computer)
 ### A dummy example
 1. **Input files:**
    - MASCOT.csv:
@@ -58,7 +58,7 @@ $ python ClassiCOL.py -d path_to_the_script -l Demo -s MASCOT
    - MaxQuant.txt
      Use the output datafile containing peptides and locational data from MaxQuant in txt format
    - Manual.csv:
-     A manual csv can be made and used as input. This file should include a sequence and if present the modification with locational information. N-term location =0, first amino acid has location 1, and C-term uses -1 as location number e.g.:
+     A manual csv can be made and used as input. This file should include a sequence and (if present) the modification/s with localisation. N-term location =0, first amino acid has location 1, and C-term uses -1 as location number e.g.:
 ```csv
 seq,modifications
 GAAGLPGPK,6|Oxidation
@@ -68,50 +68,50 @@ AGPPGPPGPAGK,3|Oxidation|9|Oxidation
 
 2. **Batch searches:**
    - MASCOT: Place all MASCOT csv files in the same folder. The algoithm will automatically analyse all files in this folder
-   - MaxQuant: Similar to MASCOT you can place all files in the same folder. Additioanlly if 1 output file contains multiple experiments, the algorithm will automatically recognise this and analyse each experiment individually
+   - MaxQuant: As with MASCOT, you can place all files in the same folder. Additionally if 1 output file contains multiple experiments, the algorithm will automatically recognise this and analyse each experiment individually
    - Manual: Same as MASCOT
 
 3. **The ClassiCOL output:**
-ClassiCOL will put all the results in the folder 'ClassiCOL_outputs', here each experiment will get its own folder for easy access. This will contain the heatmap, sunburst plot, sunburst plot with species missingness, rescored_barplot, rescored_lineplot, temporary csv output files and the final csv output file. For batch searches there will be a summary output file outputed in the ClassiCOL_output folder.
+ClassiCOL will put all results in the folder 'ClassiCOL_outputs', here each experiment will get its own folder for easy access. This will contain the heatmap, sunburst plot, sunburst plot with species missingness, rescored_barplot, rescored_lineplot, temporary csv output files and the final csv output file. For batch searches there will be a summary output file in the ClassiCOL_output folder.
 
 4. **Interpretation of the results:**
-ClassiCOL will provide an estimation of taxonomy based on the available sequences in the ClassiCOL database and peptides from your search engine. It is always up to the user to interprete what these results mean!
+ClassiCOL will provide an estimation of taxonomy based on the available sequences in the ClassiCOL database and peptides from your search engine. It is always up to the user to interpret what these results mean!
 
 - **The Heatmap**:
-  The heatmap shows the path the algorithm will take given the NCBI taxonomy (y axis) and how the protein related to each other (x axis). The colors show abundance in peptides assigned to each protein after isoBLAST.
+  The heatmap shows the path the algorithm will take given the NCBI taxonomy (y axis) and how the proteins relate to each other (x axis). The colours show abundance of peptides assigned to each protein after isoBLAST.
   
   <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/heatmap_example_html.png" width="1500" height="1500" />
   
 - **The sunburst**:
-  This figure shows an interactive overview of the output of your ClassiCOL search. A color scheme is used to highlight to most likely classification (the more yellow the more likely). By hovering of the sunburst plot you can see the amount of attributed peptides and the amount of isoBLASTed peptides. You can zoom in by clicking on the sunburst plot, and zoom out by clicking on the center node (or by refreshing).
+  This figure shows an interactive overview of the output of your ClassiCOL search. A colour scheme is used to highlight the most likely classification/s (the more yellow = the more likely). By hovering over the sunburst plot you can see the number of attributed peptides and the number of isoBLASTed peptides. You can zoom in by clicking on the sunburst plot, and zoom out by clicking on the center node (or by refreshing).
 
 <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_example_html.png"/>
   
 - **The sunburst with missingness**:
-  This plot shows exactly the same results as the sunburst plot, however now it includes all known species by NCBI that were not present during the ClassiCOL analysis. Only branches neighboring the main branch are shown up to the Order level. e.g. attached to the Family node, all missing genus (no represenative in the database used) will be shown.
+  This plot shows exactly the same results as the sunburst plot, however now it includes all known species in NCBI that were not present during the ClassiCOL analysis. Only branches neighboring the main branch are shown up to the Order level. e.g. attached to the Family node, every missing genus (no represenative in the database used) will be shown.
 
   <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/sunburst_with_missingness_example_html.png" />
   
 - **The temporary output csv**:
-  This csv is generated after the initial classification. The species/taxa are ranked to likelyhood and peptides-proteins are shown that were used during the classification.
+  This csv is generated after the initial classification. The species/taxa are ranked to likelihood and peptides-proteins are shown that were used during the classification.
   
 - **Rescored barplot**:
-  For each of the classification the top result is taken and rescored. This rescoring is based on uniqueness within the top scoring group of species, meaning that all peptides shared amongst these species will be neglected. The overlap that has uniqueness is shown in this barplot.
+  For each classification, the top result is rescored. This rescoring is based on uniqueness within the top scoring group of species, meaning that all peptides shared amongst these species will be excluded. The overlap that has uniqueness is shown in this barplot.
 
   <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/barplot_example_html.png"/>
   
 - **Rescored lineplot**:
-  This lineplot shows how the scoring changes amongst top scoring candidates. When a dropoff is noticed after rescoring, these candidates can be considered as discardable. When no drop-off is noticable, the sample can be comprised of a physical and/or genetic mixture.
+  This lineplot shows how the scoring changes amongst top scoring candidates. When a dropoff is noticed after rescoring, lower-scoring candidates can be considered as discardable. When no drop-off is noticable, the sample can be comprised of a physical and/or genetic mixture.
 
   <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/lineplot_example_html.png" width="400" height="500" />
   
 - **The final output csv**:
-  This is an easy to navigate output after rescoring. This includes peptide-protein information and classicifation information.
+  This is an easy-to-navigate output after rescoring. This includes peptide-protein information and classification information.
   
 - **The batch summary csv**:
-  This is a minimal information file that gives an overview of the top results alongside some meta data from the batch search.
+  This is a minimal information file that gives an overview of the top results alongside some metadata from the batch search.
 
 
-**WARNING_1:** Depending on the amount of unique peptides in your sample and the amount of species you want to consider the isoBLAST calculations could take a while (about 2min for +/- 1000 unique peptides per species). An overnight search is recommended.Batch searches will go much quicker towards the end.
+**WARNING_1:** Depending on the number of unique peptides in your sample and the number of species you want to consider, the isoBLAST calculations could take a while (about 2min for +/- 1000 unique peptides per species). An overnight search is recommended. Batch searches will go much quicker towards the end.
 
 **WARNING_2:** The algorithm can use a substantial amount of the available CPU and memory. When not enough is free, there is a chance the algorithm will go into error.
