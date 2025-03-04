@@ -2583,7 +2583,7 @@ if __name__ == "__main__":#rescore output in csv, reduced info output file, summ
         real_uncertain = [el for el in dfs['found_match'][dfs['type']=='With uncertainty'].values if el not in nots]
         keep_uncertain = dfs[(dfs['type']=='With uncertainty') & (dfs['found_match'].isin(real_uncertain))]
         dfs = dfs[dfs['found_match'].isin(real_uncertain)==False]
-        if len(dfs)>1:
+        if len(set(dfs['protein'].values))>1:#need at least 1 protein for continued search
             print('starting on the heatmap and collagen sequence multiple alignment')
             if not os.path.exists(path+'/MISC/collagen_distance.csv'):
                 print('No distance file found ... \n creating csv file')
