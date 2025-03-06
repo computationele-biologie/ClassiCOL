@@ -1704,7 +1704,7 @@ def make_output_file(path,df_plot, df_output, file_name, bc, l,sample_path):
     df_distance = pd.DataFrame(np.array(bc).reshape(1,-1),columns=l)
     score_to_taxon = {}
     for animal in set(list(df_output['animal'].values)):
-        score = list(df_distance[animal].values)[0]
+        score = max(list(df_distance[animal].values)[0])
         if score in score_to_taxon:
             score_to_taxon[score] = [animal]+score_to_taxon[score]
         else:
