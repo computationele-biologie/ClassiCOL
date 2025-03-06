@@ -1583,8 +1583,9 @@ def make_sunburst(dfs,all_animals,df_output,file_name,ip_animals,df_plot,path,sa
     array1 = [1 if pep in all_peptides else 0 for pep in all_peptides]
     seq_concat = '_'.join(all_peptides)
     weights_bc = [1/seq_concat.count(val) for val in all_peptides]
-    for animal in set(df_output['animal'].values):
-        
+    for animal in sorted(list(set(df_output['animal'].values)), key=lambda x:len(x))[::-1]:
+        if animal in labels:#means that the subspecies has already been assigned, otherwise it will go in double
+            continue
         a_taxon = all_taxonomy[animal]
         labels.append(animal)
         values.append(len(set(dfs['found_match'][dfs['animal']==animal].values)))
