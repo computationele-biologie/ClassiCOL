@@ -1402,7 +1402,7 @@ def new_way(all_animals, all_sequences,df_heatmap_values,df_distance,df_distance
             pep_A = set(animals_A['found_match'].values)
             animals_B = dfs[(dfs['animal'].isin(t_ani[1]))&(dfs['protein'].isin(i))]
             if (len(animals_B)==0 or len(animals_A)==0) and minimal_separation!=0:#protein missingness included for each taxonomic level, if a group is absent than it cannot be used to distinct based on that protein group
-                output[tuple(i)]=0
+                output[tuple(i)]=3
                 continue
             pep_B = set(animals_B['found_match'].values)
             if len(pep_B^pep_A)==0:#the same
@@ -1413,7 +1413,7 @@ def new_way(all_animals, all_sequences,df_heatmap_values,df_distance,df_distance
                 output[tuple(i)]=2
             else:
                 output[tuple(i)]=3 #both have unique sequences
-    else:
+    if len(output)==0:
         output['all'] = 0
     #1 means go on with animals from B
     #0 and 3 means go on with both (MIX)
@@ -1456,6 +1456,7 @@ def new_way(all_animals, all_sequences,df_heatmap_values,df_distance,df_distance
             score = new_way(list(t), new_names,df_heatmap_values,df_distance,df_distance_taxon,dfs)
             score_out = score_out + score    
     if mix_done == False and A_done == False and B_done == False and 0 in output.values():#we need to stop this branch here
+        print('Found a taxon limit')
         score_out = score_out + [all_animals]
     return score_out
 
@@ -1869,7 +1870,8 @@ def rescore(path, file_loc,f_name,sample_path):
     df['unique_peps']=u_pep
     df = df[df['species']!='']
     
-    df = df[df['score']>0.25]
+    if max(list(df['score'].values))>0.25:
+        df = df[df['score']>0.25]
     df.columns = ['peptides', 'PTM','title','species','score','group','protein','ambig_peps','unique_peps']
 
     
@@ -1956,6 +1958,10 @@ def rescore(path, file_loc,f_name,sample_path):
             plotly.offline.plot(fig)
             time.sleep(3)
         else:
+            df_scores = pd.DataFrame()
+            df_scores['species']=['']
+            df_scores['score original']=['']
+            df_scores['Rescore']=['']
             fig = px.bar(df, x=['all peptides'], y=[1],color=species, title=file_name_print+": Only 1 species in cluster "+str(k))
             try:
                 fig.write_html(path+'/Output_Classicol/'+sample_path+'/Barplot_uniquePeptides_'+file_name_print+'.html')
@@ -2057,11 +2063,13 @@ def background_check(c,ip):
     return out
 
 def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
+    print('start making sunburst with missingness')
     df_missing = dfs[['mascot_peptide','found_match','animal','type']]
     #ip_animals are all animals that were searched against
     additional = {}
     additional_animals = []
     for i in found_animals:#for all the species we found from database
+        print('Looking for related species of {}'.format(i))
         try:
             taxon = taxoniq.Taxon(scientific_name=i)
         except:
@@ -2069,7 +2077,7 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
         t_lin = [(tax.rank.name, tax.scientific_name) for tax in taxon.lineage]#get taxonomic lineage
         #find children nodes for each considered lineage uptil the order
         for find_child in t_lin:
-            if any(el in find_child[0] for el in ['species','genus','family']):#subspecies also need to be plotted if any
+            if any(el in find_child[0] for el in ['species','genus','family','order']):#subspecies also need to be plotted if any
                 f_child = find_child[1]
                 try:
                     taxon = taxoniq.Taxon(scientific_name=f_child)
@@ -2090,7 +2098,7 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
         df_missing_add = pd.DataFrame(df_missing_add.reshape(1,-1),columns=df_missing.columns)
         df_missing = pd.concat([df_missing,df_missing_add],ignore_index=True)
     all_taxonomy = find_taxons(all_missing_animals)
-    
+    print('done looking')
     labels = []
     values = []
     parents = []
@@ -2102,23 +2110,28 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
     array1 = [1 if pep in all_peptides else 0 for pep in all_peptides]
     seq_concat = '_'.join(all_peptides)
     weights_bc = [1/seq_concat.count(val) for val in all_peptides]          
-    
-    for animal in all_missing_animals:
+    print('start assigning branch scores missing')
+    for animal in all_missing_animals:#first the found animals are mapped, than the missing species are mapped to the existing tree
         
         a_taxon = all_taxonomy[animal]
         labels.append(animal)
         if animal in additional_animals:
             values.append('tbd')
             values_iso.append(0)
+            braycurtis_dist.append('nan')
+            for t in a_taxon:
+                if t[1]==animal:
+                    continue
+                if t[1] in parents or t[1] in labels: #for subspecies it will match the label, for missing species it will match the parent nodes
+                    parents.append(t[1])
+                    break
+            continue #we don't need to go in deeper, the parent node should be present already
         else:
             values.append(len(set(df_missing['found_match'][df_missing['animal']==animal].values)))
             values_iso.append(len(set(df_missing['found_match'][(df_missing['animal']==animal) & (df_missing['type'].str.contains('isobaric')==True)].values)))
             temp_peptides = set(df_missing['mascot_peptide'][df_missing['animal']==animal].values)
             array2 = [1 if pep in temp_peptides else 0 for pep in all_peptides]
             score = braycurtis(array1, array2,w=weights_bc)
-        if animal in additional_animals:
-            braycurtis_dist.append('nan')
-        else:
             braycurtis_dist.append(1-score)#columns need to be the same
         combo_taxon = []
         for key,val in all_taxonomy.items():
@@ -2127,6 +2140,7 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
         combo_taxon=set(combo_taxon)
         ai = []
         stop = False
+        
         previous_taxon = ''
         for t in a_taxon:
             if stop == True:
@@ -2182,10 +2196,11 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
     temporary_dataframe['values_iso']=values_iso
     temporary_dataframe['braycurtis_dist']=braycurtis_dist
     vals = []
+    print('adjusting for missing species')
     for k,v in temporary_dataframe[['parents','values']].values:
         if v == 'tbd':
             done = False
-            for k2,v2 in temporary_dataframe[['labels','values']].values:
+            for k2,v2 in temporary_dataframe[['labels','values']][temporary_dataframe['labels']==k].values:
                 if k==k2 and v2!= 'tbd':
                     vals.append(v2)
                     done = True
@@ -2211,7 +2226,7 @@ def make_sunburst_with_missing2(dfs,ip_animals,found_animals,path,sample_path):
             braycurtis_dist.append(x[4])
             done.append((x[1],x[2]))
     
-    
+    print('Start making figure')
     fig = go.Figure()
     fig.add_trace(go.Sunburst(
         labels=labels,
@@ -2621,27 +2636,19 @@ if __name__ == "__main__":#rescore output in csv, reduced info output file, summ
                 # with ThreadPoolExecutor(CPUs) as thread_executor:
                 align_seqs = []
                 for t in all_seqs:
-                    if t not in done and (seq_to_name[i] not in Z_distance_csv.columns or seq_to_name[t] not in Z_distance_csv.columns):
+                    if t not in done and (seq_to_name[i] not in Z_distance_csv.columns
+                                          or seq_to_name[t] not in Z_distance_csv.columns):#if not considered this run and not in previous runs
                         align_seqs.append(t)
-                    elif seq_to_name[i] in Z_distance_csv.columns and seq_to_name[t] in Z_distance_csv.columns:
-                        if list(Z_distance_csv[seq_to_name[i]].values)[list(Z_distance_csv.columns).index(seq_to_name[t])]=='nothing':
-                            align_seqs.append(t)
+                    elif seq_to_name[i] in Z_distance_csv.columns and seq_to_name[t] in Z_distance_csv.columns:#if considered previously
+                        if list(Z_distance_csv[seq_to_name[i]].values)[list(Z_distance_csv.columns).index(seq_to_name[t])]=='nothing':#if it was not matched previously
+                            if t not in done:#if it has not been calculated this run already
+                                align_seqs.append(t)
                 print(len(align_seqs), 'to do')
                 if len(align_seqs)>0:
-                    results = []
-                    for t in set(align_seqs):
-                        results.append(thread_align(i,t,matrix,calculator,sequence_db))
-                    # print('collecting alignments')
-                    # results = [future.result() for future in as_completed(futures)]
+                    results = [thread_align(i,t,matrix,calculator,sequence_db) for t in set(align_seqs)]
                     print('collected')
                     results = {key:val for val,key in results}
                     
-                    
-                    # futures = [thread_executor.submit(thread_worker2, process_executor, (i,t),matrix,calculator,sequence_db) for t in set(align_seqs)]
-                    # print('collecting alignments')
-                    # results = [future.result() for future in as_completed(futures)]
-                    # print('collected')
-                    # results = {key:val for val,key in results}
                 print('Aligned!')
                 for t in all_seqs:
                     if t in done:
