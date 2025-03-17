@@ -1664,7 +1664,7 @@ def make_sunburst(dfs,all_animals,df_output,file_name,ip_animals,df_plot,path,sa
     braycurtis_dist = []
     done = []
     for x in temporary_dataframe.values:
-        if (x[1],x[2]) not in done:
+        if (x[1],x[2]) not in done and x[2] not in labels: #if species and sub-species in database than it can be that it is in there double
             values.append(x[0])
             parents.append(x[1])
             labels.append(x[2])
