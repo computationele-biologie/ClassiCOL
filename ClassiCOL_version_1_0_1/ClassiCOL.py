@@ -2679,29 +2679,60 @@ if __name__ == "__main__":#rescore output in csv, reduced info output file, summ
             #####################################################
             print('Saving distances ...')
             distance =pd.DataFrame(np.array(distance),columns=names,index=names)
-            new=distance.columns  
-            to_save = pd.DataFrame()
-            
-            columns=list(set(list(Z_distance_csv.columns)+list(new)))
-            for ic in columns:
-                temp = []
-                for tc in columns:
-                    if ic in distance.columns and tc in distance.columns:
-                        temp.append(float(distance[ic][distance.index==tc].values))#freshly calculated distance
-                    elif ic in Z_distance_csv.columns and tc in Z_distance_csv.columns:
-                        temp.append(list(Z_distance_csv[ic].values)[list(Z_distance_csv.columns).index(tc)])#distance already calculated or unkown
-                    else:
-                        temp.append('nothing')#still unkown distance
-                to_save[ic]=temp
-            to_save.index=columns
+            print('Start retrieving calculations ...')
+            in_dist_csv = list(Z_distance_csv.columns)
+            print('Adding new columns')
+            new_to_add=[]
+            for col in distance.columns:
+                if col not in Z_distance_csv.columns:
+                    temp = []
+                    new_to_add.append(col)
+                    for col2 in in_dist_csv:
+                        if col2 in names:
+                            temp.append(float(distance[col][col2]))#freshly calculated
+                        else:
+                            temp.append('nothing')#not calculated this time
+                    #adding new calculations to dataframe
+                    Z_distance_csv[col]=temp
+            if len(new_to_add)!=0:
+                print('Adding new rows')
+                adapt = [['']*len(Z_distance_csv.columns) for i in range(0,len(new_to_add))]
+                Z_distance_csv = pd.concat([Z_distance_csv,pd.DataFrame(np.array(adapt),columns=Z_distance_csv.columns)],ignore_index=True)
+                Z_distance_csv.index = Z_distance_csv.columns
+                for nums, col in enumerate(new_to_add):
+                    if (nums/len(new_to_add))%10==0:
+                        print('{} of {} done'.format(nums,len(new_to_add)))
+                    Z_distance_csv.loc[col]=Z_distance_csv[col].values
+                print('Adding new block')
+                for col in new_to_add:
+                    for row in new_to_add:
+                        Z_distance_csv[col][row]=float(distance[col][row])
+            print('Checking if new combinations were made')
+            save_cols = Z_distance_csv.columns
+            for nums,col in enumerate(save_cols):
+                if (nums/len(save_cols))%10==0:
+                    print('{} of {} done'.format(nums,len(save_cols)))
+                if col not in distance.columns or col in new_to_add:#already added or not calculated this round
+                    continue
+                temp = Z_distance_csv[col].values
+                if 'nothing' in temp:
+                    change = []
+                    for num,el in enumerate(temp):
+                        if el == 'nothing':
+                            if col in names and save_cols[num] in names:
+                                change.append(float(distance[col][save_cols[num]]))#freshly calculated
+                                continue
+                        change.append(el)
+                    Z_distance_csv[col]=change
         
+            Z_distance_csv = Z_distance_csv.drop(['collagen_seq1','collagen_seq2','distance'],axis=0,errors='ignore')
+            Z_distance_csv = Z_distance_csv.drop(['collagen_seq1','collagen_seq2','distance'],axis=1,errors='ignore')
+            print('Save as csv file')
             with open(path+'/MISC/collagen_distance.csv', 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', lineterminator='\n')
-                writer.writerow(['index']+list(to_save.columns))
-                for q in columns:
-                    writer.writerow([q]+list(to_save[q].values))
-            Z_distance_csv = 'saving memory'
-            to_save = 'save_mem'
+                writer.writerow(['index']+list(Z_distance_csv.columns))
+                for q in Z_distance_csv.columns:
+                    writer.writerow([q]+list(Z_distance_csv[q].values))
             #######################################################################################
             print('Done saving')
             taxon_distance = pd.DataFrame(np.array(taxon_distance),columns=animals,index=animals)
