@@ -3,6 +3,7 @@
 <img src="https://github.com/EngelsI/ClassiCOL/blob/main/240405_tarandus_1_1_p/ClassiCOL-logo5_whitebackground.png" width="1000" height="350" />
 
 ## Updates since ClassiCOL version 1.0.0
+UPDATE 27March2025: Distance matrix saves faster
 1. Addition of general input file (for non-MASCOT/MaxQuant users)
 2. User defined usage of CPUs now possible
 3. Batch search remembers isoBLASTED peptides (decrease in computing time throughout batch searches)
